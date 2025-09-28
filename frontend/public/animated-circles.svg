@@ -1,0 +1,104 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradients for the circles -->
+    <radialGradient id="blueGradient1" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4682B4;stop-opacity:1" />
+    </radialGradient>
+    
+    <radialGradient id="blueGradient2" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#6495ED;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4169E1;stop-opacity:1" />
+    </radialGradient>
+    
+    <radialGradient id="purpleGradient1" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#DDA0DD;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9370DB;stop-opacity:1" />
+    </radialGradient>
+    
+    <radialGradient id="purpleGradient2" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#BA55D3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8A2BE2;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Large blue circle (top left) -->
+  <circle cx="120" cy="120" r="80" fill="url(#blueGradient1)">
+    <animateTransform
+      attributeName="transform"
+      attributeType="XML"
+      type="translate"
+      values="0,0; 5,3; 0,0; -3,5; 0,0"
+      dur="8s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="80; 85; 80; 78; 80"
+      dur="6s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Medium purple circle (top right) -->
+  <circle cx="280" cy="140" r="55" fill="url(#purpleGradient1)">
+    <animateTransform
+      attributeName="transform"
+      attributeType="XML"
+      type="translate"
+      values="0,0; -4,2; 0,0; 3,-4; 0,0"
+      dur="7s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="55; 58; 55; 52; 55"
+      dur="5s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Small blue circle (left middle) -->
+  <circle cx="80" cy="220" r="35" fill="url(#blueGradient2)">
+    <animateTransform
+      attributeName="transform"
+      attributeType="XML"
+      type="translate"
+      values="0,0; 3,-2; 0,0; -2,4; 0,0"
+      dur="9s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="35; 38; 35; 33; 35"
+      dur="4s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Medium purple circle (bottom left) -->
+  <circle cx="150" cy="290" r="50" fill="url(#purpleGradient2)">
+    <animateTransform
+      attributeName="transform"
+      attributeType="XML"
+      type="translate"
+      values="0,0; -3,4; 0,0; 4,-2; 0,0"
+      dur="6s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="50; 53; 50; 47; 50"
+      dur="7s"
+      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Large blue circle (bottom right) -->
+  <circle cx="320" cy="280" r="75" fill="url(#blueGradient2)">
+    <animateTransform
+      attributeName="transform"
+      attributeType="XML"
+      type="translate"
+      values="0,0; 2,-5; 0,0; -4,3; 0,0"
+      dur="10s"
+      repeatCount="indefinite"/>
+    <animate
+      attributeName="r"
+      values="75; 78; 75; 72; 75"
+      dur="8s"
+      repeatCount="indefinite"/>
+  </circle>
+</svg>
