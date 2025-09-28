@@ -230,26 +230,26 @@ export default function Graph3D({
       <div className="flex flex-col items-center justify-center h-full bg-gray-900 text-white p-8">
         <div className="text-center max-w-md">
           <h2 className="text-2xl font-bold mb-4">
-            {!isClient ? 'Loading 3D Graph...' : '3D Visualization Not Available'}
+            {!isClient ? 'loading 3d graph...' : '3d visualization not available'}
           </h2>
           {isClient && (
             <>
               <p className="mb-4">
-                Your browser or device doesn't support WebGL, which is required for 3D graphics.
+                your browser or device doesn't support webgl, which is required for 3d graphics.
               </p>
               <div className="bg-gray-800 rounded-lg p-4 mb-4">
-                <h3 className="font-semibold mb-2">Try these solutions:</h3>
+                <h3 className="font-semibold mb-2">try these solutions:</h3>
                 <ul className="text-left space-y-2 text-sm">
-                  <li>• Use Chrome, Firefox, or Safari (latest versions)</li>
-                  <li>• Enable hardware acceleration in browser settings</li>
-                  <li>• Check if WebGL is enabled at chrome://gpu</li>
-                  <li>• Try on a different device or browser</li>
+                  <li>• use chrome, firefox, or safari (latest versions)</li>
+                  <li>• enable hardware acceleration in browser settings</li>
+                  <li>• check if webgl is enabled at chrome://gpu</li>
+                  <li>• try on a different device or browser</li>
                 </ul>
               </div>
               <div className="bg-gray-800 rounded-lg p-4">
-                <h3 className="font-semibold mb-2">Graph Data Summary:</h3>
-                <p className="text-sm">Nodes: {filteredData.nodes.length}</p>
-                <p className="text-sm">Links: {filteredData.links.length}</p>
+                <h3 className="font-semibold mb-2">graph data summary:</h3>
+                <p className="text-sm">nodes: {filteredData.nodes.length}</p>
+                <p className="text-sm">links: {filteredData.links.length}</p>
               </div>
             </>
           )}

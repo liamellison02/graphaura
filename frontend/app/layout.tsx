@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GraphAura - Knowledge Graph Visualization",
-  description: "AI-powered knowledge graph for bringing your memories to life",
+  title: "graphaura - ai-powered 3d knowledge graph",
+  description: "bring memories back to life with an ai-powered 3d knowledge graph",
 };
 
 export default function RootLayout({

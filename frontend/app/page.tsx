@@ -9,7 +9,7 @@ const Graph3D = dynamic(() => import('@/components/Graph3D'), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-screen bg-gray-900">
-      <div className="text-white text-xl">Loading 3D Graph...</div>
+      <div className="text-white text-xl">loading 3d graph...</div>
     </div>
   ),
 });
@@ -23,10 +23,10 @@ export default function Home() {
       try {
         const data = await graphApi.getGraph();
         setGraphData(data);
-        console.log('Loaded graph data:', data.nodes.length, 'nodes,', data.links.length, 'links');
+        console.log('loaded graph data:', data.nodes.length, 'nodes,', data.links.length, 'links');
       } catch (error) {
-        console.error('Failed to load graph data:', error);
-        setError('Failed to load graph data');
+        console.error('failed to load graph data:', error);
+        setError('failed to load graph data');
       } finally {
         setLoading(false);
       }
@@ -37,56 +37,59 @@ export default function Home() {
 
   return (
     <div className="relative w-screen h-screen bg-[#000011] overflow-hidden">
-      {/* Header Controls */}
-      <div className="absolute top-4 left-4 z-10 bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 shadow-xl">
-        <h1 className="text-2xl font-bold text-white mb-4">GraphAura</h1>
-
-        {/* Search */}
-        <div className="mb-3">
+      {/* Bottom Search Controls */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 bg-gray-800/50 backdrop-blur-sm rounded-lg px-6 py-2 shadow-xl w-11/12 max-w-4xl">
+        <div className="flex items-center gap-4">
+          {/* Search */}
           <input
             type="text"
-            placeholder="Search nodes..."
+            placeholder="search nodes..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-64 px-3 py-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-3 py-1.5 bg-gray-700/60 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
           />
-        </div>
 
-        {/* Filter by Type */}
-        <div className="flex gap-2">
-          <button
-            onClick={() => setFilterByType(null)}
-            className={`px-3 py-1 rounded-lg transition-colors ${
-              !filterByType ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
-          >
-            All
-          </button>
-          <button
-            onClick={() => setFilterByType('person')}
-            className={`px-3 py-1 rounded-lg transition-colors ${
-              filterByType === 'person' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
-          >
-            People
-          </button>
-          <button
-            onClick={() => setFilterByType('event')}
-            className={`px-3 py-1 rounded-lg transition-colors ${
-              filterByType === 'event' ? 'bg-green-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
-          >
-            Events
-          </button>
-          <button
-            onClick={() => setFilterByType('location')}
-            className={`px-3 py-1 rounded-lg transition-colors ${
-              filterByType === 'location' ? 'bg-red-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
-          >
-            Locations
-          </button>
+          {/* Filter by Type */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setFilterByType(null)}
+              className={`px-3 py-1 rounded-lg transition-colors text-sm ${
+                !filterByType ? 'bg-blue-600 text-white' : 'bg-gray-700/60 text-gray-300 hover:bg-gray-600/60'
+              }`}
+            >
+              all
+            </button>
+            <button
+              onClick={() => setFilterByType('person')}
+              className={`px-3 py-1 rounded-lg transition-colors text-sm ${
+                filterByType === 'person' ? 'bg-blue-600 text-white' : 'bg-gray-700/60 text-gray-300 hover:bg-gray-600/60'
+              }`}
+            >
+              people
+            </button>
+            <button
+              onClick={() => setFilterByType('event')}
+              className={`px-3 py-1 rounded-lg transition-colors text-sm ${
+                filterByType === 'event' ? 'bg-green-600 text-white' : 'bg-gray-700/60 text-gray-300 hover:bg-gray-600/60'
+              }`}
+            >
+              events
+            </button>
+            <button
+              onClick={() => setFilterByType('location')}
+              className={`px-3 py-1 rounded-lg transition-colors text-sm ${
+                filterByType === 'location' ? 'bg-red-600 text-white' : 'bg-gray-700/60 text-gray-300 hover:bg-gray-600/60'
+              }`}
+            >
+              locations
+            </button>
+          </div>
         </div>
+      </div>
+
+      {/* Header - Just the title */}
+      <div className="absolute top-4 left-4 z-10">
+        <h1 className="text-2xl font-bold text-white">GraphAura</h1>
       </div>
 
       {/* Selected Node Info */}
@@ -95,12 +98,12 @@ export default function Home() {
       {/* 3D Graph */}
       {isLoading ? (
         <div className="flex items-center justify-center h-screen bg-gray-900">
-          <div className="text-white text-xl">Fetching graph data...</div>
+          <div className="text-white text-xl">fetching graph data...</div>
         </div>
       ) : (
         <Suspense fallback={
           <div className="flex items-center justify-center h-screen bg-gray-900">
-            <div className="text-white text-xl">Loading 3D Graph...</div>
+            <div className="text-white text-xl">loading 3d graph...</div>
           </div>
         }>
           <Graph3D backgroundColor="#000011" />
@@ -116,9 +119,9 @@ function SelectedNodeInfo() {
   if (!selectedNode) return null;
 
   return (
-    <div className="absolute bottom-4 left-4 z-10 bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 shadow-xl max-w-sm">
+    <div className="absolute top-4 right-4 z-10 bg-gray-800/70 backdrop-blur-sm rounded-lg p-4 shadow-xl max-w-sm">
       <h3 className="text-lg font-semibold text-white mb-2">{selectedNode.name}</h3>
-      <p className="text-sm text-gray-300 capitalize mb-2">Type: {selectedNode.type}</p>
+      <p className="text-sm text-gray-300 capitalize mb-2">type: {selectedNode.type}</p>
       {selectedNode.metadata && (
         <div className="text-sm text-gray-400">
           {Object.entries(selectedNode.metadata).map(([key, value]) => (
