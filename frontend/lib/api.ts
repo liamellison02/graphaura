@@ -68,8 +68,8 @@ export const graphApi = {
       // Process results
       if (response.data.results) {
         response.data.results.forEach((record: any) => {
-          // Add nodes
-          if (record.n && !nodes.has(record.n.name)) {
+          // Add nodes - ensure they have valid names
+          if (record.n && record.n.name && !nodes.has(record.n.name)) {
             const nodeType = (record.n.category === 'Event' ? 'event' :
                              record.n.category === 'Date' ? 'event' :
                              record.n.category === 'Location' ? 'location' :
@@ -77,7 +77,7 @@ export const graphApi = {
 
             nodes.set(record.n.name, {
               id: record.n.name,
-              name: record.n.name,
+              name: record.n.name || 'Unnamed Node',
               type: nodeType,
               val: 1,
               color: NODE_COLORS[nodeType],
@@ -88,7 +88,7 @@ export const graphApi = {
             });
           }
 
-          if (record.m && !nodes.has(record.m.name)) {
+          if (record.m && record.m.name && !nodes.has(record.m.name)) {
             const nodeType = (record.m.category === 'Event' ? 'event' :
                              record.m.category === 'Date' ? 'event' :
                              record.m.category === 'Location' ? 'location' :
@@ -96,7 +96,7 @@ export const graphApi = {
 
             nodes.set(record.m.name, {
               id: record.m.name,
-              name: record.m.name,
+              name: record.m.name || 'Unnamed Node',
               type: nodeType,
               val: 1,
               color: NODE_COLORS[nodeType],
@@ -107,8 +107,8 @@ export const graphApi = {
             });
           }
 
-          // Add relationships as links
-          if (record.r && record.n && record.m) {
+          // Add relationships as links - ensure nodes have names
+          if (record.r && record.n && record.n.name && record.m && record.m.name) {
             const linkId = `${record.n.name}-${record.m.name}`;
             const reverseLinkId = `${record.m.name}-${record.n.name}`;
 

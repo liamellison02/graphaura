@@ -82,7 +82,7 @@ export default function Graph3D({
 
     if (searchQuery) {
       nodes = nodes.filter((node) =>
-        node.name.toLowerCase().includes(searchQuery.toLowerCase())
+        node.name && node.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
       const nodeIds = new Set(nodes.map((n) => n.id));
       links = links.filter((link) => {
