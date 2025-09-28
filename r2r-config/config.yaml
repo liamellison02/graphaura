@@ -1,0 +1,61 @@
+# R2R Production Configuration
+
+app:
+  project_name: "GraphAura R2R"
+
+completion:
+  provider: "anthropic"
+  generation_config:
+    model: "claude-opus-4-1-20250805"
+    temperature: 0.1
+    top_p: 1.0
+    max_tokens_to_sample: 1024
+    stream: false
+    add_generation_kwargs: {}
+
+embedding:
+  provider: "openai"
+  base_model: "text-embedding-3-small"
+  base_dimension: 1536
+  batch_size: 128
+  add_title_as_prefix: true
+
+ingestion:
+  excluded_parsers: ["mp4"]
+
+kg:
+  provider: "neo4j"
+  batch_size: 1
+  kg_extraction_prompt: "graphaura_kg_extraction"
+
+  generation_config:
+    model: "claude-opus-4-1-20250805"
+    temperature: 0.1
+    top_p: 1.0
+    max_tokens_to_sample: 1024
+    stream: false
+    add_generation_kwargs: {}
+
+database:
+  provider: "postgres"
+
+crypto:
+  provider: "bcrypt"
+
+auth:
+  provider: "r2r"
+  access_token_lifetime_in_minutes: 1440
+  refresh_token_lifetime_in_days: 7
+  require_authentication: true
+  require_email_verification: false
+  default_admin_email: "admin@graphaura.com"
+  default_admin_password: "change-me-in-production"
+
+agent:
+  system_instruction_name: "graphaura_system"
+  tool_names:
+    - "search"
+    - "rag"
+
+  generation_config:
+    model: "claude-opus-4-1-20250805"

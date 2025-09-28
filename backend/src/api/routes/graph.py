@@ -380,13 +380,11 @@ async def get_graph_visualization(
         Graph data formatted for visualization
     """
     try:
-        # Get entities based on filter
         entities = await neo4j_service.find_entities(
             filter=config.entity_filter,
             limit=config.max_nodes
         )
 
-        # Get relationships for these entities
         entity_ids = [e["id"] for e in entities]
         relationships = []
 
@@ -394,7 +392,6 @@ async def get_graph_visualization(
             rels = await neo4j_service.get_entity_relationships(entity_id)
             relationships.extend(rels[:config.max_edges // len(entity_ids)])
 
-        # Format for visualization
         nodes = [
             {
                 "id": e["id"],
@@ -448,7 +445,6 @@ async def execute_cypher_query(
         Query results
     """
     try:
-        # Basic query validation (prevent destructive operations in production)
         forbidden_keywords = ["DROP", "DELETE", "REMOVE", "DETACH"]
         if any(keyword in query.upper() for keyword in forbidden_keywords):
             from ...config import settings

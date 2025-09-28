@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 # Search and retrieval API routes.
 
+=======
+>>>>>>> 4123c1f (new forcegraph3d ui)
 from fastapi import APIRouter, HTTPException, Depends
 from typing import Optional, Dict, Any, List
 import structlog
@@ -131,7 +134,10 @@ async def hybrid_search(
             "sources": []
         }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4123c1f (new forcegraph3d ui)
         if include_documents:
             doc_results = await r2r_service.search(
                 query=query,
@@ -144,7 +150,10 @@ async def hybrid_search(
                 "results": doc_results
             })
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4123c1f (new forcegraph3d ui)
         if include_graph:
             from ...models.entities import EntityFilter
 
@@ -233,7 +242,11 @@ async def semantic_search(
 
         if include_documents:
             doc_results = await r2r_service.search(
+<<<<<<< HEAD
                 query="", 
+=======
+                query="",
+>>>>>>> 4123c1f (new forcegraph3d ui)
                 search_type="vector",
                 limit=limit
             )
@@ -334,7 +347,10 @@ async def get_search_suggestions(
         from ...models.entities import EntityFilter
 
         entities = await neo4j_service.find_entities(limit=100)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4123c1f (new forcegraph3d ui)
         suggestions = []
         for entity in entities:
             name = entity.get("name", "")

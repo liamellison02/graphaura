@@ -31,7 +31,6 @@ class PostgresDB:
                 statement_cache_size=0  # Required for PgBouncer/Supabase pooler
             )
 
-            # Initialize database schema
             await self._init_schema()
 
             logger.info(
@@ -52,11 +51,9 @@ class PostgresDB:
     async def _init_schema(self):
         """Initialize database schema."""
         async with self.pool.acquire() as conn:
-            # Enable required extensions
             await conn.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto")
             await conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
 
-            # Create metadata table
             await conn.execute("""
                 CREATE TABLE IF NOT EXISTS metadata (
                     key TEXT PRIMARY KEY,

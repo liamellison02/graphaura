@@ -1,0 +1,65 @@
+services:
+  # Backend API
+  - type: web
+    name: graphaura-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: graphaura-db
+          property: connectionString
+      - key: NEO4J_URI
+        sync: false
+      - key: NEO4J_USER
+        value: neo4j
+      - key: NEO4J_PASSWORD
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: https://graphaura-frontend.vercel.app
+      - key: R2R_BASE_URL
+        fromService:
+          name: graphaura-r2r
+          type: web
+          property: hostport
+    healthCheckPath: /health
+    autoDeploy: true
+
+  # R2R Service
+  - type: web
+    name: graphaura-r2r
+    runtime: docker
+    dockerCommand: docker run -p 7272:7272 ragtoriches/r2r:latest
+    envVars:
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: graphaura-db
+          property: host
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: graphaura-db
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: graphaura-db
+          property: password
+      - key: POSTGRES_DBNAME
+        value: r2r
+      - key: ANTHROPIC_API_KEY
+        sync: false
+    healthCheckPath: /health
+    autoDeploy: false
+
+databases:
+  # PostgreSQL with pgvector
+  - name: graphaura-db
+    databaseName: graphaura
+    user: graphaura
+    postgresMajorVersion: 16
+    plan: starter
+    ipAllowList: []
