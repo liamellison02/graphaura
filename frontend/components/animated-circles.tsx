@@ -15,7 +15,6 @@ export function AnimatedCircles({ className = "" }: { className?: string }) {
         className={`transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
       >
         <defs>
-          {/* Gradients for the circles */}
           <radialGradient id="blueGradient1" cx="0.3" cy="0.3" r="0.8">
             <stop offset="0%" style={{stopColor:'#87CEEB', stopOpacity:1}} />
             <stop offset="100%" style={{stopColor:'#4682B4', stopOpacity:1}} />
@@ -36,7 +35,7 @@ export function AnimatedCircles({ className = "" }: { className?: string }) {
             <stop offset="100%" style={{stopColor:'#8A2BE2', stopOpacity:1}} />
           </radialGradient>
 
-          {/* Glow filters */}
+          {/* glow thing */}
           <filter id="glow">
             <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
             <feMerge> 
@@ -46,7 +45,6 @@ export function AnimatedCircles({ className = "" }: { className?: string }) {
           </filter>
         </defs>
         
-        {/* Large blue circle (top left) */}
         <circle cx="120" cy="120" r="80" fill="url(#blueGradient1)" filter="url(#glow)">
           <animateTransform
             attributeName="transform"
@@ -67,7 +65,6 @@ export function AnimatedCircles({ className = "" }: { className?: string }) {
             repeatCount="indefinite"/>
         </circle>
         
-        {/* Medium purple circle (top right) */}
         <circle cx="280" cy="140" r="55" fill="url(#purpleGradient1)" filter="url(#glow)">
           <animateTransform
             attributeName="transform"
@@ -88,7 +85,6 @@ export function AnimatedCircles({ className = "" }: { className?: string }) {
             repeatCount="indefinite"/>
         </circle>
         
-        {/* Small blue circle (left middle) */}
         <circle cx="80" cy="220" r="35" fill="url(#blueGradient2)" filter="url(#glow)">
           <animateTransform
             attributeName="transform"
@@ -109,7 +105,6 @@ export function AnimatedCircles({ className = "" }: { className?: string }) {
             repeatCount="indefinite"/>
         </circle>
         
-        {/* Medium purple circle (bottom left) */}
         <circle cx="150" cy="290" r="50" fill="url(#purpleGradient2)" filter="url(#glow)">
           <animateTransform
             attributeName="transform"
@@ -130,7 +125,6 @@ export function AnimatedCircles({ className = "" }: { className?: string }) {
             repeatCount="indefinite"/>
         </circle>
         
-        {/* Large blue circle (bottom right) */}
         <circle cx="320" cy="280" r="75" fill="url(#blueGradient2)" filter="url(#glow)">
           <animateTransform
             attributeName="transform"

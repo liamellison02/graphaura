@@ -124,14 +124,11 @@
   }
 }
 
-/* CSS Custom Properties for Animations */
 @property --border-angle {
   inherits: false;
   initial-value: 0deg;
   syntax: '<angle>';
 }
-
-/* Premium Glow Animation for GraphAura */
 @keyframes aura-pulse {
   0%, 100% {
     text-shadow: 
@@ -182,7 +179,6 @@
   letter-spacing: -0.02em;
 }
 
-/* Responsive typography for premium feel */
 @media (max-width: 640px) {
   .aura-text {
     font-size: 3.5rem;
@@ -204,14 +200,11 @@
   }
 }
 
-/* Animated Gradient Border Effect */
 @keyframes border-spin {
   to {
     --border-angle: 360deg;
   }
 }
-
-/* Reusable Animated Border Classes */
 .animated-border {
   border: 1px solid transparent;
   background: linear-gradient(#0f172a, #0f172a) padding-box, conic-gradient(from var(--border-angle), rgba(71, 85, 105, 0.48) 80%, #60a5fa 86%, #d8b4fe 90%, #60a5fa 94%, rgba(71, 85, 105, 0.48)) border-box;

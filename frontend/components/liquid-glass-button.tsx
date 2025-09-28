@@ -43,7 +43,6 @@ export function LiquidGlassButton({ children, onClick, className = "" }: LiquidG
       onMouseUp={() => setIsPressed(false)}
       onClick={handleClick}
     >
-      {/* Liquid animation background */}
       <div 
         className={`
           absolute inset-0 -z-10
@@ -59,7 +58,7 @@ export function LiquidGlassButton({ children, onClick, className = "" }: LiquidG
         }}
       />
       
-      {/* Liquid blob animations */}
+      {/* blob stuff */}
       <div className="absolute inset-0 overflow-hidden rounded-2xl">
         <div 
           className={`
@@ -81,7 +80,6 @@ export function LiquidGlassButton({ children, onClick, className = "" }: LiquidG
         />
       </div>
       
-      {/* Shimmer effect */}
       <div 
         className={`
           absolute inset-0
@@ -91,8 +89,6 @@ export function LiquidGlassButton({ children, onClick, className = "" }: LiquidG
           ${isHovered ? 'translate-x-full' : '-translate-x-full'}
         `}
       />
-      
-      {/* Button content */}
       <span className="relative z-10 flex items-center justify-center gap-2">
         {children}
       </span>
