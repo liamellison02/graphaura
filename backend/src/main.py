@@ -1,5 +1,3 @@
-"""Main FastAPI application for GraphAura backend."""
-
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,10 +9,8 @@ from .config import settings
 from .database import PostgresDB, Neo4jDB
 from .services import Neo4jService, VectorService, R2RService
 
-# Import routers
 from .api.routes import documents, graph, search
 
-# Configure structured logging
 structlog.configure(
     processors=[
         structlog.stdlib.filter_by_level,
@@ -35,37 +31,46 @@ structlog.configure(
 
 logger = structlog.get_logger(__name__)
 
-# Global database instances
 postgres_db = PostgresDB()
 neo4j_db = Neo4jDB()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Manage application lifecycle."""
-    # Startup
     logger.info("Starting GraphAura backend", environment=settings.environment)
 
     try:
-        # Connect to databases
         await postgres_db.connect()
-        await neo4j_db.connect()
 
-        # Initialize services
-        neo4j_service = Neo4jService()
-        await neo4j_service.connect()
-        await neo4j_service.create_indices()
+        try:
+            await neo4j_db.connect()
+            neo4j_service = Neo4jService()
+            await neo4j_service.connect()
+            await neo4j_service.create_indices()
+            app.state.neo4j_service = neo4j_service
+            logger.info("Neo4j connected successfully")
+        except Exception as e:
+            logger.warning("Neo4j connection failed, continuing without graph database", error=str(e))
+            app.state.neo4j_service = None
 
-        vector_service = VectorService()
-        await vector_service.connect()
+        try:
+            vector_service = VectorService()
+            await vector_service.connect()
+            app.state.vector_service = vector_service
+            logger.info("Vector service connected successfully")
+        except Exception as e:
+            logger.warning("Vector service connection failed", error=str(e))
+            app.state.vector_service = None
 
-        r2r_service = R2RService()
-        # Store services in app state for access in routes
-        app.state.r2r_service = r2r_service
-        app.state.neo4j_service = neo4j_service
-        app.state.vector_service = vector_service
+        try:
+            r2r_service = R2RService()
+            app.state.r2r_service = r2r_service
+            logger.info("R2R service initialized successfully")
+        except Exception as e:
+            logger.warning("R2R service initialization failed", error=str(e))
+            app.state.r2r_service = None
 
-        logger.info("All services initialized successfully")
+        logger.info("Core services initialized successfully")
 
     except Exception as e:
         logger.error("Failed to initialize services", error=str(e))
@@ -73,23 +78,22 @@ async def lifespan(app: FastAPI):
 
     yield
 
-    # Shutdown
     logger.info("Shutting down GraphAura backend")
 
     try:
         await postgres_db.disconnect()
-        await neo4j_db.disconnect()
-        if hasattr(app.state, 'r2r_service'):
+        if neo4j_db.driver:
+            await neo4j_db.disconnect()
+        if hasattr(app.state, 'r2r_service') and app.state.r2r_service:
             await app.state.r2r_service.cleanup()
-        if hasattr(app.state, 'neo4j_service'):
+        if hasattr(app.state, 'neo4j_service') and app.state.neo4j_service:
             await app.state.neo4j_service.disconnect()
-        if hasattr(app.state, 'vector_service'):
+        if hasattr(app.state, 'vector_service') and app.state.vector_service:
             await app.state.vector_service.disconnect()
     except Exception as e:
         logger.error("Error during shutdown", error=str(e))
 
 
-# Create FastAPI app
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
@@ -97,7 +101,6 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
@@ -107,10 +110,8 @@ app.add_middleware(
 )
 
 
-# Global exception handler
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-    """Handle all unhandled exceptions."""
     logger.error(
         "Unhandled exception",
         error=str(exc),
@@ -127,10 +128,8 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 
-# Health check endpoint
 @app.get("/health")
 async def health_check():
-    """Health check endpoint."""
     health_status = {
         "status": "healthy",
         "environment": settings.environment,
@@ -138,7 +137,6 @@ async def health_check():
         "services": {}
     }
 
-    # Check PostgreSQL
     try:
         await postgres_db.fetchone("SELECT 1")
         health_status["services"]["postgres"] = "healthy"
@@ -146,7 +144,6 @@ async def health_check():
         health_status["services"]["postgres"] = "unhealthy"
         health_status["status"] = "degraded"
 
-    # Check Neo4j
     try:
         if neo4j_db.driver:
             await neo4j_db.driver.verify_connectivity()
@@ -158,13 +155,14 @@ async def health_check():
         health_status["services"]["neo4j"] = "unhealthy"
         health_status["status"] = "degraded"
 
-    # Check R2R
     try:
         from .services import R2RService
         async with R2RService() as r2r:
-            r2r_healthy = await r2r.health_check()
-            health_status["services"]["r2r"] = "healthy" if r2r_healthy else "unhealthy"
-            if not r2r_healthy:
+            r2r_health = await r2r.health_check()
+            if r2r_health.get("status") == "healthy":
+                health_status["services"]["r2r"] = "healthy"
+            else:
+                health_status["services"]["r2r"] = "unhealthy"
                 health_status["status"] = "degraded"
     except:
         health_status["services"]["r2r"] = "unhealthy"
@@ -173,10 +171,8 @@ async def health_check():
     return health_status
 
 
-# Root endpoint
 @app.get("/")
 async def root():
-    """Root endpoint."""
     return {
         "name": settings.app_name,
         "version": settings.app_version,
@@ -186,7 +182,6 @@ async def root():
     }
 
 
-# Register API routers
 app.include_router(
     documents.router,
     prefix=f"{settings.api_v1_prefix}",
@@ -206,17 +201,13 @@ app.include_router(
 )
 
 
-# Metrics endpoint (optional)
 @app.get("/metrics")
 async def metrics():
-    """Get application metrics."""
     try:
-        # Get vector statistics
         from .services import VectorService
         async with VectorService() as vector_service:
             vector_stats = await vector_service.get_statistics()
 
-        # Get graph statistics
         from .services import Neo4jService
         async with Neo4jService() as neo4j_service:
             entity_count = await neo4j_service.execute_cypher(
@@ -239,7 +230,6 @@ async def metrics():
 
 
 def run_server():
-    """Run the server using uvicorn."""
     uvicorn.run(
         "src.main:app",
         host=settings.host,

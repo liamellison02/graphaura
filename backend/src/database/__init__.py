@@ -1,5 +1,3 @@
-"""Database layer for GraphAura."""
-
 from .postgres import PostgresDB
 from .neo4j import Neo4jDB
 

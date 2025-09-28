@@ -19,13 +19,11 @@ router = APIRouter(prefix="/graph", tags=["graph"])
 
 
 async def get_neo4j_service():
-    """Dependency to get Neo4j service instance."""
     async with Neo4jService() as service:
         yield service
 
 
 async def get_vector_service():
-    """Dependency to get Vector service instance."""
     async with VectorService() as service:
         yield service
 
@@ -46,10 +44,8 @@ async def create_entity(
         Created entity with ID
     """
     try:
-        # Create entity in Neo4j
         entity_id = await neo4j_service.create_entity(entity)
 
-        # Store embedding if provided
         if entity.embedding:
             await vector_service.store_embedding(
                 entity_id=entity_id,

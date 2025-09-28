@@ -51,7 +51,7 @@ class R2RService:
         self.base_url = base_url or settings.r2r_base_url
         self.client = R2RClient(self.base_url)
         self._httpx = httpx.AsyncClient(
-            timeout=httpx.Timeout(30.0, connect=10.0),
+            timeout=httpx.Timeout(5.0, connect=2.0),
             headers={"Accept": "application/json"},
         )
         self._temp_dir = tempfile.gettempdir()
@@ -61,7 +61,7 @@ class R2RService:
     async def health_check(self) -> dict[str, Any]:
         """Check R2R service health."""
         try:
-            response = await self._httpx.get(f"{self.base_url}/health")
+            response = await self._httpx.get(f"{self.base_url}/v3/health")
             if response.status_code == 200:
                 return {
                     "status": "healthy",
@@ -491,3 +491,11 @@ class R2RService:
         if self._httpx:
             await self._httpx.aclose()
         logger.info("R2R service cleaned up")
+
+    async def __aenter__(self):
+        """Async context manager entry."""
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        """Async context manager exit."""
+        await self.cleanup()

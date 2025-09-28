@@ -1,5 +1,3 @@
-"""Neo4j database connection and management."""
-
 from neo4j import AsyncGraphDatabase, AsyncDriver
 from typing import Optional
 import structlog
@@ -10,14 +8,10 @@ logger = structlog.get_logger(__name__)
 
 
 class Neo4jDB:
-    """Neo4j database connection manager."""
-
     def __init__(self):
-        """Initialize Neo4j connection manager."""
         self.driver: Optional[AsyncDriver] = None
 
     async def connect(self):
-        """Create Neo4j driver."""
         try:
             self.driver = AsyncGraphDatabase.driver(
                 settings.neo4j_uri,
@@ -25,10 +19,8 @@ class Neo4jDB:
                 max_connection_lifetime=3600
             )
 
-            # Verify connectivity
             await self.driver.verify_connectivity()
 
-            # Initialize constraints and indices
             await self._init_schema()
 
             logger.info(
@@ -41,15 +33,12 @@ class Neo4jDB:
             raise
 
     async def disconnect(self):
-        """Close Neo4j driver."""
         if self.driver:
             await self.driver.close()
             logger.info("Disconnected from Neo4j")
 
     async def _init_schema(self):
-        """Initialize database constraints and indices."""
         async with self.driver.session(database=settings.neo4j_database) as session:
-            # Create unique constraint on entity ID
             try:
                 await session.run("""
                     CREATE CONSTRAINT entity_id_unique IF NOT EXISTS
@@ -58,7 +47,6 @@ class Neo4jDB:
             except:
                 pass  # Constraint might already exist
 
-            # Create indices for performance
             indices = [
                 "CREATE INDEX entity_name IF NOT EXISTS FOR (e:Entity) ON (e.name)",
                 "CREATE INDEX entity_type IF NOT EXISTS FOR (e:Entity) ON (e.type)",
@@ -79,7 +67,6 @@ class Neo4jDB:
             logger.info("Neo4j schema initialized")
 
     def get_driver(self) -> AsyncDriver:
-        """Get the Neo4j driver instance."""
         if not self.driver:
             raise RuntimeError("Neo4j driver not initialized. Call connect() first.")
         return self.driver

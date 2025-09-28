@@ -1,12 +1,9 @@
-"""Document management API routes."""
-
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Form
 from typing import Optional, Dict, Any, List
 import structlog
 import json
 
 from ...services import R2RService
-from ...models.entities import Document
 
 logger = structlog.get_logger(__name__)
 
@@ -14,7 +11,6 @@ router = APIRouter(prefix="/documents", tags=["documents"])
 
 
 async def get_r2r_service():
-    """Dependency to get R2R service instance."""
     async with R2RService() as service:
         yield service
 
@@ -38,10 +34,8 @@ async def upload_document(
         Document processing result
     """
     try:
-        # Parse metadata if provided
         doc_metadata = json.loads(metadata) if metadata else {}
 
-        # Save uploaded file temporarily
         import tempfile
         import os
 
@@ -51,13 +45,11 @@ async def upload_document(
             tmp_file_path = tmp_file.name
 
         try:
-            # Ingest document into R2R
             document_id = await r2r_service.ingest_document(
                 file_path=tmp_file_path,
                 metadata=doc_metadata
             )
 
-            # Extract entities if requested
             entities = []
             if extract_entities:
                 entities = await r2r_service.extract_entities(document_id)

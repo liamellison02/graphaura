@@ -27,7 +27,8 @@ class PostgresDB:
                 database=settings.postgres_db,
                 min_size=10,
                 max_size=20,
-                command_timeout=60
+                command_timeout=60,
+                statement_cache_size=0  # Required for PgBouncer/Supabase pooler
             )
 
             # Initialize database schema

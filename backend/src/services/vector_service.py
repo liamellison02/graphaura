@@ -32,7 +32,8 @@ class VectorService:
                 database=settings.postgres_db,
                 min_size=10,
                 max_size=20,
-                command_timeout=60
+                command_timeout=60,
+                statement_cache_size=0  # Required for PgBouncer/Supabase pooler
             )
 
             # Create pgvector extension if not exists
@@ -62,17 +63,18 @@ class VectorService:
 
     async def _create_tables(self, conn: asyncpg.Connection):
         """Create necessary tables for vector storage."""
-        await conn.execute("""
+        # Use string formatting for CREATE TABLE since parameters aren't supported
+        await conn.execute(f"""
             CREATE TABLE IF NOT EXISTS entity_embeddings (
                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                 entity_id TEXT NOT NULL UNIQUE,
                 entity_type TEXT NOT NULL,
-                embedding vector($1) NOT NULL,
-                metadata JSONB DEFAULT '{}',
+                embedding vector({self.dimension}) NOT NULL,
+                metadata JSONB DEFAULT '{{}}',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
-        """, self.dimension)
+        """)
 
         # Create index for vector similarity search
         await conn.execute("""
