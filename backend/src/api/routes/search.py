@@ -1,4 +1,4 @@
-"""Search and retrieval API routes."""
+# Search and retrieval API routes.
 
 from fastapi import APIRouter, HTTPException, Depends
 from typing import Optional, Dict, Any, List
@@ -13,19 +13,16 @@ router = APIRouter(prefix="/search", tags=["search"])
 
 
 async def get_r2r_service():
-    """Dependency to get R2R service instance."""
     async with R2RService() as service:
         yield service
 
 
 async def get_neo4j_service():
-    """Dependency to get Neo4j service instance."""
     async with Neo4jService() as service:
         yield service
 
 
 async def get_vector_service():
-    """Dependency to get Vector service instance."""
     async with VectorService() as service:
         yield service
 
@@ -116,7 +113,7 @@ async def hybrid_search(
     neo4j_service: Neo4jService = Depends(get_neo4j_service)
 ):
     """
-    Perform hybrid search across documents and graph.
+    Hybrid search across documents and graph.
 
     Args:
         query: Search query
@@ -134,7 +131,7 @@ async def hybrid_search(
             "sources": []
         }
 
-        # Search documents
+
         if include_documents:
             doc_results = await r2r_service.search(
                 query=query,
@@ -147,10 +144,8 @@ async def hybrid_search(
                 "results": doc_results
             })
 
-        # Search graph entities
+
         if include_graph:
-            # For graph search, we'd need to generate an embedding for the query
-            # This is a simplified version
             from ...models.entities import EntityFilter
 
             entity_filter = EntityFilter(
@@ -162,7 +157,6 @@ async def hybrid_search(
                 limit=limit
             )
 
-            # Filter by query text match (simple text search)
             filtered_graph = [
                 e for e in graph_results
                 if query.lower() in e.get("name", "").lower()
@@ -215,7 +209,6 @@ async def semantic_search(
             "sources": []
         }
 
-        # Search entity embeddings
         entity_results = await vector_service.similarity_search(
             query_embedding=query_embedding,
             limit=limit,
@@ -223,7 +216,6 @@ async def semantic_search(
             threshold=threshold
         )
 
-        # Enrich with entity data
         enriched_entities = []
         for item in entity_results:
             entity = await neo4j_service.get_entity(item["entity_id"])
@@ -239,12 +231,9 @@ async def semantic_search(
             "results": enriched_entities
         })
 
-        # Search documents if requested
         if include_documents:
-            # Convert embedding to query for R2R
-            # This is simplified - in practice you'd use R2R's vector search
             doc_results = await r2r_service.search(
-                query="",  # R2R would handle embedding search internally
+                query="", 
                 search_type="vector",
                 limit=limit
             )
@@ -279,14 +268,13 @@ async def contextual_search(
     Args:
         query: Search query
         context_entity_ids: Entity IDs for context
-        max_depth: Maximum graph traversal depth
-        limit: Maximum results
+        max_depth: max. graph traversal depth
+        limit: max. results
 
     Returns:
         Contextual search results
     """
     try:
-        # Get related entities from graph
         related_entities = []
         for entity_id in context_entity_ids:
             from ...models.relationships import GraphTraversalRequest
@@ -300,16 +288,13 @@ async def contextual_search(
             traversal_result = await neo4j_service.traverse_graph(traversal)
             related_entities.extend(traversal_result["nodes"])
 
-        # Get unique entity names for context
         entity_names = list(set(
             e.get("name", "") for e in related_entities
             if e.get("name")
         ))
 
-        # Build contextual query
         contextual_query = f"{query} {' '.join(entity_names[:10])}"
 
-        # Search with context
         doc_results = await r2r_service.search(
             query=contextual_query,
             search_type="hybrid",
@@ -340,18 +325,16 @@ async def get_search_suggestions(
 
     Args:
         partial_query: Partial search query
-        limit: Maximum suggestions
+        limit: Max. suggestions
 
     Returns:
         List of search suggestions
     """
     try:
-        # Simple implementation - search entity names
         from ...models.entities import EntityFilter
 
         entities = await neo4j_service.find_entities(limit=100)
 
-        # Filter by partial match
         suggestions = []
         for entity in entities:
             name = entity.get("name", "")
@@ -390,8 +373,8 @@ async def get_entity_clusters(
     Get clusters of similar entities.
 
     Args:
-        min_similarity: Minimum similarity for clustering
-        min_cluster_size: Minimum cluster size
+        min_similarity: min. similarity for clustering
+        min_cluster_size: min. cluster size
 
     Returns:
         Entity clusters
@@ -402,7 +385,6 @@ async def get_entity_clusters(
             min_cluster_size=min_cluster_size
         )
 
-        # Enrich clusters with entity data
         enriched_clusters = []
         for cluster in clusters:
             cluster_entities = []
