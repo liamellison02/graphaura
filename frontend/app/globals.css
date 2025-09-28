@@ -24,3 +24,23 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Landing page specific styles */
+@keyframes border-spin {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+@property --border-angle {
+  inherits: false;
+  initial-value: 0deg;
+  syntax: '<angle>';
+}
+
+.animated-border-subtle {
+  border: 1px solid transparent;
+  background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)) padding-box,
+              conic-gradient(from var(--border-angle), rgba(71, 85, 105, 0.2) 80%, rgba(96, 165, 250, 0.6) 86%, rgba(196, 181, 253, 0.7) 90%, rgba(96, 165, 250, 0.6) 94%, rgba(71, 85, 105, 0.2)) border-box;
+  animation: border-spin 8s linear infinite;
+}
