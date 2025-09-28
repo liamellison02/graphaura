@@ -89,7 +89,7 @@ export default function Home() {
 
       {/* Header - Just the title */}
       <div className="absolute top-4 left-4 z-10">
-        <h1 className="text-2xl font-bold text-white">GraphAura</h1>
+        <h1 className="text-2xl font-bold text-white">graphaura</h1>
       </div>
 
       {/* Selected Node Info */}
