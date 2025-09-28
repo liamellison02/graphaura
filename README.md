@@ -1,101 +1,69 @@
 # graphaura
 
-Bring your memories back to life with GraphAura. Transform photos and docs into an AI-powered 3D knowledge graph of people, places, and moments to explore your memories and share insights.
+bring your memories back to life with graphaura. transform photos and docs into an ai-powered 3d knowledge graph of people, places, and moments to explore your memories and share insights.
 
-## Repositories
+<img width="830" height="756" alt="graphaura.dev" src="https://github.com/user-attachments/assets/f6d690be-ae6f-41a0-9fd1-0d0387fb6cb6" />
+
+## repos
 
 - graphaura: this monorepo with frontend and backend
-- R2R: external service for ingestion, chunking, embeddings, and RAG
+- r2r: external service for ingestion, chunking, embeddings, and RAG
 
-## Tech stack
+## tech stack
 
-- Frontend: Next.js 15, React 19, Tailwind CSS, react-force-graph-3d
-- Backend: FastAPI (Python 3.13), structlog
-- Data: Neo4j, PostgreSQL + pgvector, Redis
-- AI: R2R for ingestion, NER, embeddings, and RAG
+- frontend: next.js, react, tailwind css, react-force-graph-3d
+- backend: fastapi (python 3.13), structlog
+- data: neo4j, postgresql + pgvector, redis
+- ai: r2r for ingestion, NER, embeddings, and RAG
 
-## Architecture
+## architecture
 
 ```mermaid
 graph TB
-  U[Browser] --> FE[Next.js Frontend]
-  FE -->|REST| BE[FastAPI Backend]
-  BE -->|HTTP| R2R[R2R Service]
-  BE -->|bolt| NEO[(Neo4j)]
-  BE -->|asyncpg + pgvector| PG[(Postgres)]
-  BE -->|Redis| REDIS[(Redis)]
-  R2R -->|entities + embeddings| BE
+  u[browser] --> fe[next.js frontend]
+  fe -->|rest| be[fastapi backend]
+  be -->|http| r2r[r2r service]
+  be -->|bolt| neo[(neo4j)]
+  be -->|asyncpg + pgvector| pg[(postgres)]
+  be -->|redis| redis[(redis)]
+  r2r -->|entities + embeddings| be
 ```
 
-## Data flow
+## data flow
 
 ```mermaid
 flowchart LR
-  Files[Files, Photos, Notes, PDFs] --> Upload[/Upload via UI or API/]
-  Upload --> R2RIngest[R2R ingest + chunk + embed + extract]
-  R2RIngest --> Entities[Entities + Relationships]
-  Entities --> NEO[(Neo4j)]
-  R2RIngest --> Embeds[Embeddings]
-  Embeds --> PG[(Postgres pgvector)]
-  Query[User query] --> API[Search APIs]
-  API --> Hybrid[Hybrid search]
-  Hybrid --> Docs[R2R document search]
-  Hybrid --> Graph[Graph traversal]
-  Graph --> FEVis[3D graph UI]
-  Docs --> FEVis
-  NEO --> API
-  PG --> API
+  files[files, photos, notes, pdfs] --> upload[/upload via ui or api/]
+  upload --> r2ringest[r2r ingest + chunk + embed + extract]
+  r2ringest --> Entities[Entities + Relationships]
+  entities --> neo[(neo4j)]
+  r2ringest --> embeds[embeddings]
+  embeds --> pg[(postgres pgvector)]
+  query[user query] --> api[search apis]
+  api --> hybrid[hybrid search]
+  hybrid --> docs[r2r document search]
+  hybrid --> grph[graph traversal]
+  grph --> fevis[3d graph ui]
+  docs --> fevis
+  neo --> api
+  pg --> api
 ```
 
-## Monorepo layout
+## monorepo layout
 
 ```text
 graphaura/
-  backend/        FastAPI app, services, and APIs
-  frontend/       Next.js app with 3D graph visualization
+  backend/        fastapi app, services, and apis
+  frontend/       next.js app with 3d graph visualization
 ```
 
-## Quick start (dev)
-
-1. Dependencies
-   - Neo4j 5 running locally
-   - Postgres with pgvector extension
-   - Redis
-   - R2R service available at `http://localhost:7272`
-
-2. Backend
-   - `cd backend`
-   - `uv sync`
-   - copy `.env.example` to `.env` and set connection strings
-   - `uv run uvicorn src.main:app --reload`
-
-3. Frontend
-   - `cd frontend`
-   - `npm install`
-   - `npm run dev`
-
-## Key endpoints
+## key endpoints
 
 - `GET /health` - service health
 - `GET /metrics` - vector and graph counts
-- `POST /api/v1/documents/upload` - upload and process document via R2R
+- `POST /api/v1/documents/upload` - upload and process document via r2r
 - `GET /api/v1/documents/{id}` - document metadata
 - `POST /api/v1/documents/create-graph` - build graph from documents
 - `POST /api/v1/graph/entities` - create entity
 - `GET /api/v1/graph/entities/{id}` - fetch entity and relationships
 - `POST /api/v1/search/hybrid` - hybrid search across documents and graph
-
-## Configuration
-
-Set via environment variables (see `backend/.env.example` and `backend/src/config.py`). Common keys:
-
-- `POSTGRES_*` - Postgres connection and database name
-- `NEO4J_*` - Neo4j connection
-- `R2R_BASE_URL` - R2R base URL
-- `REDIS_*` - Redis connection
-- `VECTOR_DIMENSION`, `SIMILARITY_THRESHOLD`, `MAX_GRAPH_DEPTH`
-
-## Notes
-
-- See `backend/README.md` for detailed APIs and development commands.
-- Frontend runs on `http://localhost:3000`. Backend runs on `http://localhost:8000` with OpenAPI docs at `/docs`.
