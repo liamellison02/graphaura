@@ -2,15 +2,6 @@
 
 Multi-modal knowledge graph backend integrating R2R and Neo4j.
 
-## Features
-
-- 📄 **Document Processing**: Upload and process documents through R2R
-- 🔍 **Hybrid Search**: Combined vector, keyword, and graph search
-- 🕸️ **Knowledge Graph**: Neo4j-powered entity and relationship management
-- 🎯 **Vector Similarity**: PGVector-based semantic search
-- 🚀 **Async API**: Full async/await support with FastAPI
-- 📊 **Entity Extraction**: Automatic entity and relationship extraction
-
 ## Tech Stack
 
 - **Python 3.13** with uv package manager
@@ -32,18 +23,21 @@ Multi-modal knowledge graph backend integrating R2R and Neo4j.
 ### Setup
 
 1. Install dependencies with uv:
+
 ```bash
 cd backend
 uv sync
 ```
 
 2. Set up environment:
+
 ```bash
 cp .env.example .env
 # Edit .env with your configuration
 ```
 
 3. Initialize databases:
+
 ```bash
 # PostgreSQL
 createdb graphaura
@@ -53,6 +47,7 @@ psql -d graphaura -c "CREATE EXTENSION IF NOT EXISTS vector;"
 ```
 
 4. Run the server:
+
 ```bash
 uv run uvicorn src.main:app --reload
 ```
@@ -60,6 +55,7 @@ uv run uvicorn src.main:app --reload
 ## API Endpoints
 
 ### Documents
+
 - `POST /api/v1/documents/upload` - Upload and process documents
 - `GET /api/v1/documents/{id}` - Get document details
 - `DELETE /api/v1/documents/{id}` - Delete document
@@ -68,6 +64,7 @@ uv run uvicorn src.main:app --reload
 - `POST /api/v1/documents/create-graph` - Create graph from documents
 
 ### Graph
+
 - `POST /api/v1/graph/entities` - Create entity
 - `GET /api/v1/graph/entities/{id}` - Get entity
 - `PUT /api/v1/graph/entities/{id}` - Update entity
@@ -81,6 +78,7 @@ uv run uvicorn src.main:app --reload
 - `POST /api/v1/graph/cypher` - Execute Cypher query
 
 ### Search
+
 - `POST /api/v1/search/documents` - Search documents
 - `POST /api/v1/search/rag` - RAG search with context
 - `POST /api/v1/search/hybrid` - Hybrid search across sources
@@ -90,6 +88,7 @@ uv run uvicorn src.main:app --reload
 - `GET /api/v1/search/clusters` - Get entity clusters
 
 ### System
+
 - `GET /health` - Health check
 - `GET /metrics` - Application metrics
 - `GET /docs` - OpenAPI documentation
@@ -124,22 +123,26 @@ backend/
 ## Development
 
 ### Run with hot reload:
+
 ```bash
 uv run uvicorn src.main:app --reload --port 8000
 ```
 
 ### Run tests:
+
 ```bash
 uv run pytest
 ```
 
 ### Format code:
+
 ```bash
 uv run black src/
 uv run ruff check --fix src/
 ```
 
 ### Type checking:
+
 ```bash
 uv run mypy src/
 ```
@@ -149,6 +152,7 @@ uv run mypy src/
 All configuration is done through environment variables. See `.env.example` for available options.
 
 Key configurations:
+
 - `VECTOR_DIMENSION`: Embedding dimension (must match R2R config)
 - `MAX_GRAPH_DEPTH`: Maximum graph traversal depth
 - `SIMILARITY_THRESHOLD`: Default similarity threshold for vector search
@@ -159,7 +163,3 @@ Key configurations:
 docker build -t graphaura-backend .
 docker run -p 8000:8000 --env-file .env graphaura-backend
 ```
-
-## License
-
-MIT
