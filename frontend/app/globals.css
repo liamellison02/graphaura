@@ -123,3 +123,109 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* CSS Custom Properties for Animations */
+@property --border-angle {
+  inherits: false;
+  initial-value: 0deg;
+  syntax: '<angle>';
+}
+
+/* Premium Glow Animation for GraphAura */
+@keyframes aura-pulse {
+  0%, 100% {
+    text-shadow: 
+      0 0 20px rgba(147, 197, 253, 0.8),
+      0 0 40px rgba(147, 197, 253, 0.6),
+      0 0 60px rgba(147, 197, 253, 0.4),
+      0 0 80px rgba(196, 181, 253, 0.3),
+      0 0 100px rgba(196, 181, 253, 0.2);
+    filter: brightness(1);
+  }
+  50% {
+    text-shadow: 
+      0 0 30px rgba(196, 181, 253, 0.9),
+      0 0 50px rgba(196, 181, 253, 0.7),
+      0 0 70px rgba(196, 181, 253, 0.5),
+      0 0 90px rgba(147, 197, 253, 0.4),
+      0 0 120px rgba(147, 197, 253, 0.3);
+    filter: brightness(1.1);
+  }
+}
+
+@keyframes aura-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.aura-text {
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(147, 197, 253, 0.95) 25%,
+    rgba(196, 181, 253, 0.95) 50%,
+    rgba(147, 197, 253, 0.95) 75%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: 
+    aura-pulse 4s ease-in-out infinite,
+    aura-shimmer 6s linear infinite;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+
+/* Responsive typography for premium feel */
+@media (max-width: 640px) {
+  .aura-text {
+    font-size: 3.5rem;
+    line-height: 1;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .aura-text {
+    font-size: 5rem;
+    line-height: 1;
+  }
+}
+
+@media (min-width: 1025px) {
+  .aura-text {
+    font-size: 6rem;
+    line-height: 1;
+  }
+}
+
+/* Animated Gradient Border Effect */
+@keyframes border-spin {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+/* Reusable Animated Border Classes */
+.animated-border {
+  border: 1px solid transparent;
+  background: linear-gradient(#0f172a, #0f172a) padding-box, conic-gradient(from var(--border-angle), rgba(71, 85, 105, 0.48) 80%, #60a5fa 86%, #d8b4fe 90%, #60a5fa 94%, rgba(71, 85, 105, 0.48)) border-box;
+  animation: border-spin 4s linear infinite;
+}
+
+.animated-border-premium {
+  border: 1px solid transparent;
+  background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)) padding-box, conic-gradient(from var(--border-angle), rgba(71, 85, 105, 0.3) 80%, rgba(96, 165, 250, 0.9) 86%, rgba(196, 181, 253, 0.95) 90%, rgba(96, 165, 250, 0.9) 94%, rgba(71, 85, 105, 0.3)) border-box;
+  animation: border-spin 6s linear infinite;
+}
+
+.animated-border-subtle {
+  border: 1px solid transparent;
+  background: linear-gradient(#1e293b, #1e293b) padding-box, conic-gradient(from var(--border-angle), rgba(71, 85, 105, 0.2) 80%, rgba(96, 165, 250, 0.6) 86%, rgba(196, 181, 253, 0.7) 90%, rgba(96, 165, 250, 0.6) 94%, rgba(71, 85, 105, 0.2)) border-box;
+  animation: border-spin 8s linear infinite;
+}

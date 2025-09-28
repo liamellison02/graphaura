@@ -27,11 +27,11 @@ export function LiquidGlassButton({ children, onClick, className = "" }: LiquidG
         px-6 py-3 
         backdrop-blur-md 
         bg-white/10 
-        border border-white/20
+        animated-border-subtle
         rounded-xl
         text-white font-medium text-base
         transition-all duration-300 ease-out
-        hover:bg-white/15 hover:border-white/30
+        hover:bg-white/15
         hover:shadow-2xl hover:shadow-blue-500/20
         active:scale-95
         group

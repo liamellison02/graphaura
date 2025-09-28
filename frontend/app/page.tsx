@@ -18,7 +18,7 @@ export default function Home() {
         <h1
           className={`${instrumentSerif.className} text-white text-center text-balance font-normal tracking-tight text-8xl drop-shadow-lg mb-4`}
         >
-          GraphAura
+          graphaura
         </h1>
 
         
