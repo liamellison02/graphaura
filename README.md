@@ -3,9 +3,7 @@
 bring your memories back to life with graphaura. transform photos and docs into an ai-powered 3d knowledge graph of people, places, and moments to explore your memories and share insights.
 
 
-<img width="1705" height="1170" alt="Screenshot 2025-09-28 at 6 59 29 AM" src="https://github.com/user-attachments/assets/4ac6691d-14dd-4a4e-893e-956cff0e8063" />
-
-<img width="830" height="756" alt="graphaura.dev" src="https://github.com/user-attachments/assets/f6d690be-ae6f-41a0-9fd1-0d0387fb6cb6" />
+<img width="1705" height="1170" alt="graphaura.dev" src="https://github.com/user-attachments/assets/4ac6691d-14dd-4a4e-893e-956cff0e8063" />
 
 ## repos
 
@@ -31,7 +29,6 @@ graph TB
   be -->|redis| redis[(redis)]
   r2r -->|entities + embeddings| be
 ```
-<img width="3840" height="632" alt="LR" src="https://github.com/user-attachments/assets/4f1cfa7f-ecfb-40a3-af6f-f88083317a71" />
 
 ## data flow
 
@@ -53,7 +50,7 @@ flowchart LR
   pg --> api
 ```
 
-<img width="3840" height="2954" alt="tb" src="https://github.com/user-attachments/assets/e3c35ba2-e79b-497b-a6b4-e10f68abc29f" />
+
 
 ## monorepo layout
 
